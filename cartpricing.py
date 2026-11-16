@@ -1,9 +1,7 @@
-
 """
-Intentional CodeTrace test fixture.
+Corrected CodeTrace test fixture.
 
-BUG: Tax is calculated on the original subtotal before the discount is applied.
-Expected behavior: apply the discount first, then calculate tax on the discounted amount.
+The discount is applied before tax is calculated.
 """
 
 def calculate_cart_total(subtotal: float, discount_percent: float, tax_rate: float) -> float:
@@ -16,20 +14,13 @@ def calculate_cart_total(subtotal: float, discount_percent: float, tax_rate: flo
         raise ValueError("tax_rate must be between 0 and 1")
 
     discount = subtotal * (discount_percent / 100)
+    discounted_subtotal = subtotal - discount
+    tax = discounted_subtotal * tax_rate
 
-    # INTENTIONAL BUG: tax should use the discounted subtotal.
-    tax = subtotal * tax_rate
-
-    total = subtotal - discount + tax
+    total = discounted_subtotal + tax
     return round(total, 2)
 
 
 if __name__ == "__main__":
-    # Expected: 99.00; actual buggy result: 100.00
+    # Expected result: 99.00
     print(calculate_cart_total(100.00, 10, 0.10))
-
-
-
-
-
-
